@@ -19,6 +19,7 @@ export const fetchTeams = createAsyncThunk(
       const response = await teamApi.getAll();
       return response.data.teams;
     } catch (error) {
+      console.error('Error fetching teams:', error);
       return rejectWithValue('Failed to fetch teams');
     }
   }
@@ -31,6 +32,7 @@ export const fetchTeamById = createAsyncThunk(
       const response = await teamApi.getById(id);
       return response.data.team;
     } catch (error) {
+      console.error('Error fetching team by ID:', error);
       return rejectWithValue('Failed to fetch team');
     }
   }
@@ -49,6 +51,7 @@ export const fetchBudgetStatuses = createAsyncThunk(
         .map(response => response?.data?.budgetStatus)
         .filter((status): status is BudgetStatus => status !== undefined);
     } catch (error) {
+      console.error('Error fetching budget statuses:', error);
       return rejectWithValue('Failed to fetch budget statuses');
     }
   }
@@ -61,6 +64,7 @@ export const createTeam = createAsyncThunk(
       const response = await teamApi.create(data);
       return response.data.team;
     } catch (error) {
+      console.error('Error creating team:', error);
       return rejectWithValue('Failed to create team');
     }
   }
@@ -73,6 +77,7 @@ export const updateTeam = createAsyncThunk(
       const response = await teamApi.update(id, data);
       return response.data.team;
     } catch (error) {
+      console.error('Error updating team:', error);
       return rejectWithValue('Failed to update team');
     }
   }
@@ -85,6 +90,7 @@ export const deleteTeam = createAsyncThunk(
       await teamApi.delete(id);
       return id;
     } catch (error) {
+      console.error('Error deleting team:', error);
       return rejectWithValue('Failed to delete team');
     }
   }

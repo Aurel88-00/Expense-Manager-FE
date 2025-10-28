@@ -20,6 +20,7 @@ export const fetchExpenses = createAsyncThunk(
       const response = await expenseApi.getAll(params);
       return response.data.expenses;
     } catch (error) {
+      console.error('Error fetching expenses:', error);
       return rejectWithValue('Failed to fetch expenses');
     }
   }
@@ -32,6 +33,7 @@ export const fetchExpenseById = createAsyncThunk(
       const response = await expenseApi.getById(id);
       return response.data.expense;
     } catch (error) {
+      console.error('Error fetching expense by ID:', error);
       return rejectWithValue('Failed to fetch expense');
     }
   }
@@ -44,6 +46,7 @@ export const createExpense = createAsyncThunk(
       const response = await expenseApi.create(data);
       return response.data;
     } catch (error) {
+      console.error('Error creating expense:', error);
       return rejectWithValue('Failed to create expense');
     }
   }
@@ -56,6 +59,7 @@ export const updateExpense = createAsyncThunk(
       const response = await expenseApi.update(id, data);
       return response.data.expense;
     } catch (error) {
+      console.error('Error updating expense:', error);
       return rejectWithValue('Failed to update expense');
     }
   }
@@ -68,6 +72,7 @@ export const deleteExpense = createAsyncThunk(
       await expenseApi.delete(id);
       return id;
     } catch (error) {
+      console.error('Error deleting expense:', error);
       return rejectWithValue('Failed to delete expense');
     }
   }
@@ -80,6 +85,7 @@ export const fetchInsights = createAsyncThunk(
       const response = await expenseApi.getInsights(teamId);
       return response.data.insights;
     } catch (error) {
+      console.error('Error fetching insights:', error);
       return rejectWithValue('Failed to fetch insights');
     }
   }
@@ -92,6 +98,7 @@ export const fetchForecast = createAsyncThunk(
       const response = await expenseApi.getForecast(teamId);
       return response.data.forecast;
     } catch (error) {
+      console.error('Error fetching forecast:', error);
       return rejectWithValue('Failed to fetch forecast');
     }
   }
@@ -104,6 +111,7 @@ export const bulkAction = createAsyncThunk(
       const response = await expenseApi.bulkAction(data);
       return response.data;
     } catch (error) {
+      console.error('Error performing bulk action:', error);
       return rejectWithValue('Failed to perform bulk action');
     }
   }
@@ -239,6 +247,7 @@ const expenseSlice = createSlice({
         state.error = null;
       })
       .addCase(bulkAction.fulfilled, (state, _action) => {
+        console.log('Bulk action fulfilled:', _action);
         state.loading = false;
       })
       .addCase(bulkAction.rejected, (state, action) => {
