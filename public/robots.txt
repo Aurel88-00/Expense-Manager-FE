@@ -1,0 +1,7 @@
+# Allow all search engines
+User-agent: *
+Allow: /
+
+# Sitemap location (update with your domain when deployed)
+Sitemap: /sitemap.xml
+
