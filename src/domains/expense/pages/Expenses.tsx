@@ -4,7 +4,6 @@ import { Plus, Receipt, CheckCircle, XCircle, Eye, Edit, Trash2, AlertTriangle }
 import { useExpenses, useDeleteExpense, useBulkAction } from '../hooks/useExpenses';
 import { useTeams } from '../../team/hooks/useTeams';
 import type { Expense } from '../../../shared/lib/types';
-import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 import { PageErrorBoundary } from '../../../shared/components';
 import { Button, Card, CardBody, LoadingState, EmptyState, ErrorState, TextInput, Select, StatusBadge } from '../../../shared/components/ui';
@@ -79,39 +78,7 @@ const Expenses = () => {
     setSearchParams({});
   };
 
-  const handleExportPdf = useCallback(async () => {
-    const filename = `Expense_Report_${format(new Date(), 'yyyyMMdd')}.pdf`;
-
-    await toast.promise(
-      (async () => {
-        const response = await fetch('/api/expenses/export-pdf', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(filterParams),
-        });
-
-        if (!response.ok) {
-          const message = await response.text().catch(() => 'Failed to export PDF');
-          throw new Error(message || 'Failed to export PDF');
-        }
-
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-      })(),
-      {
-        loading: 'Generating PDF...',
-        success: 'PDF downloaded.',
-        error: 'Failed to generate PDF.',
-      }
-    );
-  }, [filterParams]);
+  // PDF export removed for memory optimization
 
   const handleDeleteExpense = useCallback((expenseId: string) => {
     if (!window.confirm('Are you sure you want to delete this expense?')) {
@@ -178,10 +145,9 @@ const Expenses = () => {
               <h1 className="text-2xl font-bold text-foreground">Expenses</h1>
               <p className="text-muted-foreground">Manage and track team expenses</p>
             </div>
-            <div className="flex gap-2">
-              <Button variant="secondary" onClick={handleExportPdf}>Export to PDF</Button>
-              <Button icon={Plus} onClick={() => setShowCreateModal(true)}>Add Expense</Button>
-            </div>
+                   <div className="flex gap-2">
+                     <Button icon={Plus} onClick={() => setShowCreateModal(true)}>Add Expense</Button>
+                   </div>
           </div>
 
           {/* Filters Card */}
@@ -336,7 +302,7 @@ const Expenses = () => {
                             {typeof expense.team === 'string' ? expense.team : expense.team?.name || 'Unknown'}
                           </td>
                           <td className="px-4 py-3 text-sm text-muted-foreground hidden md:table-cell">{expense.category}</td>
-                          <td className="px-4 py-3 text-sm text-muted-foreground hidden lg:table-cell">{format(new Date(expense.date), 'MMM dd, yyyy')}</td>
+                          <td className="px-4 py-3 text-sm text-muted-foreground hidden lg:table-cell">{new Date(expense.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}</td>
                           <td className="px-4 py-3">
                             <StatusBadge status={expense.status as 'pending' | 'approved' | 'rejected'} />
                           </td>
